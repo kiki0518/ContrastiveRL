@@ -81,11 +81,13 @@ step = 0
 
 
 def train_reward_model(df, use_contrastive, epochs=3):
+    print("Training Reward Model. Contrastive:", use_contrastive)
     # rm_head = RewardHead().to(device)
     rm_head = RewardHead(dim=model.config.hidden_size).to(device)
     optimizer = torch.optim.Adam(list(rm_head.parameters()) + list(model.parameters()), lr=1e-5)
 
     for epoch in range(epochs):
+        print(f"\nEpoch {epoch}")
         for i in range(0, len(df), BATCH_SIZE):
             batch = df.iloc[i:i+BATCH_SIZE]
 
@@ -126,6 +128,7 @@ def evaluate_robustness(df, rm_head):
     deltas = []
 
     for i in range(0, len(df), BATCH_SIZE):
+        print(f"Evaluating batch {i}...")
         batch = df.iloc[i:i+BATCH_SIZE]
 
         chosen = batch["chosen_response"].tolist()
